@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SereneDaily | Calm Self-Improvement & Quotes</title>
+  <title>Schedule Right | Growth & Organization</title>
   <!-- Google Fonts: Outfit for titles, Inter for body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,17 +21,35 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-main">
-        <h1 id="app-title"><span class="accent-text">Serene</span>Daily</h1>
+        <h1 id="app-title"><span class="accent-text">Schedule</span>Right</h1>
         <p class="header-subtitle">Your calm space for daily growth, habits, and self-reflection.</p>
       </div>
-      <div class="header-date-box" id="header-date-box">
-        <div class="header-day-num" id="current-day-num">08</div>
-        <div class="header-day-details">
-          <span class="header-day-name" id="current-day-name">Monday</span>
-          <span class="header-month-year" id="current-month-year">June 2026</span>
+      <div class="header-right-side" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary" id="change-bg-btn" style="height: 48px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); z-index: 10;">
+          <i data-lucide="image"></i> Next Dream
+        </button>
+        <div class="header-date-box" id="header-date-box">
+          <div class="header-day-num" id="current-day-num">08</div>
+          <div class="header-day-details">
+            <span class="header-day-name" id="current-day-name">Monday</span>
+            <span class="header-month-year" id="current-month-year">June 2026</span>
+          </div>
         </div>
       </div>
     </header>
+
+    <!-- Vision Board Section -->
+    <div class="dashboard-card dreams-card" id="dreams-card-section" style="margin-top: 1rem;">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title"><i data-lucide="compass" class="peach-icon"></i> My Vision Board</h2>
+          <p class="card-subtitle">Click a card to set as background or mark as achieved</p>
+        </div>
+      </div>
+      <div class="dreams-grid" id="dreams-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
 
     <!-- Main Dashboard Grid -->
     <main class="dashboard-grid">
@@ -205,6 +223,30 @@
           </div>
         </div>
 
+        <!-- First-Time Experiences Notepad -->
+        <div class="dashboard-card first-times-card" id="first-times-card-section">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><i data-lucide="sparkles" class="peach-icon"></i> First-Time Milestones</h2>
+              <p class="card-subtitle">Log the unique things you do for the first time</p>
+            </div>
+            <span class="badge" id="first-times-count-badge">0 logged</span>
+          </div>
+
+          <!-- Add First-Time Form -->
+          <form class="add-first-time-form" id="add-first-time-form" style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <input type="text" id="first-time-input" placeholder="What did you do for the first time today?" required autocomplete="off">
+            <button type="submit" class="todo-add-btn" id="first-time-add-btn" title="Log Milestone">
+              <i data-lucide="plus"></i>
+            </button>
+          </form>
+
+          <!-- First-Time Items List -->
+          <div class="first-times-items-list" id="first-times-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
         <!-- Selected Date View Drawer/Card (Shows when historical date is clicked) -->
         <div class="dashboard-card date-details-card hidden" id="date-details-card">
           <div class="card-header">
@@ -233,7 +275,7 @@
 
     <!-- Footer -->
     <footer class="app-footer-bar">
-      <p>SereneDaily &bull; Connected to SQL Server database `SelfImprovementDB` &bull; Built for Self-Improvement</p>
+      <p>Schedule Right &bull; Connected to SQL Server database `SelfImprovementDB` &bull; Built for Self-Improvement</p>
     </footer>
   </div>
 

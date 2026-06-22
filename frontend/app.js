@@ -56,6 +56,45 @@ const elCloseDetailsBtn = document.getElementById('close-details-btn');
 
 const elToastContainer = document.getElementById('toast-container');
 
+// Background images list
+const BACKGROUNDS = [
+  'images/google_office.png',
+  'images/going_abroad.png',
+  'images/kumaraparvatha_trek.png',
+  'images/badminton_victory.png',
+  'images/gym_morning.png',
+  'images/study_coding.png',
+  'images/morning_meditation.png',
+  'images/success_summit.png',
+  'images/thailand_lanterns.png',
+  'images/kyoto_bamboo.png'
+];
+let currentBgIndex = 0;
+
+// Vision Board Data
+const DREAMS = [
+  { id: 'google', title: 'Work at Google', image: 'images/google_office.png' },
+  { id: 'abroad', title: 'Travel Abroad', image: 'images/going_abroad.png' },
+  { id: 'trek', title: 'Conquer Kumaraparvatha', image: 'images/kumaraparvatha_trek.png' },
+  { id: 'badminton', title: 'Win Badminton Matches', image: 'images/badminton_victory.png' },
+  { id: 'gym', title: '5:30 Gym Consistency', image: 'images/gym_morning.png' },
+  { id: 'code', title: 'Master Coding & Skills', image: 'images/study_coding.png' },
+  { id: 'meditation', title: 'Daily Mindfulness', image: 'images/morning_meditation.png' },
+  { id: 'summit', title: 'Reach Full Potential', image: 'images/success_summit.png' },
+  { id: 'thailand', title: 'Thailand Light Festival', image: 'images/thailand_lanterns.png' },
+  { id: 'kyoto', title: 'Explore Kyoto, Japan', image: 'images/kyoto_bamboo.png' }
+];
+let achievedDreams = JSON.parse(localStorage.getItem('scheduleRightAchievedDreams') || '[]');
+const elDreamsGrid = document.getElementById('dreams-grid');
+
+
+// Notepad Elements
+const elFirstTimesForm = document.getElementById('add-first-time-form');
+const elFirstTimeInput = document.getElementById('first-time-input');
+const elFirstTimesList = document.getElementById('first-times-list');
+const elFirstTimesCountBadge = document.getElementById('first-times-count-badge');
+
+
 // ============================================================================
 // 🔔 UTILITIES & TOASTS
 // ============================================================================
@@ -792,6 +831,168 @@ async function handleRetroActivitySubmit(e) {
   }
 }
 
+// Apply background image style
+function applyBackground(index) {
+  document.body.style.backgroundImage = `url('${BACKGROUNDS[index]}')`;
+}
+
+// Fetch and render First-Time experiences
+async function fetchFirstTimes() {
+  try {
+    const res = await fetch(`${API_BASE}/first-times`);
+    if (!res.ok) throw new Error("Could not fetch first-time experiences.");
+    const items = await res.json();
+    
+    elFirstTimesList.innerHTML = '';
+    elFirstTimesCountBadge.textContent = `${items.length} logged`;
+
+    if (items.length === 0) {
+      elFirstTimesList.innerHTML = `
+        <div class="empty-state">
+          <i data-lucide="sparkles" style="width: 24px; height: 24px; margin-bottom: 0.5rem; color: var(--color-peach);"></i>
+          <span>No milestones logged yet. Make today a day of firsts!</span>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    items.forEach(item => {
+      const ftId = item.ExperienceID || item.experienceid || item.experienceId;
+      const desc = item.Description || item.description;
+      const dateLogged = item.DateLogged || item.datelogged || item.dateLogged;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'first-times-item';
+
+      const formattedDate = formatHumanDate(dateLogged);
+
+      itemEl.innerHTML = `
+        <div class="first-times-item-left">
+          <i data-lucide="star" style="color: var(--color-peach); fill: var(--color-peach); width: 16px; height: 16px; flex-shrink: 0;"></i>
+          <div class="first-times-item-details">
+            <span class="first-times-item-text">${desc}</span>
+            <span class="first-times-item-date">${formattedDate}</span>
+          </div>
+        </div>
+        <button class="first-times-delete-btn" aria-label="Delete milestone">
+          <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+        </button>
+      `;
+
+      // Delete click
+      itemEl.querySelector('.first-times-delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteFirstTime(ftId);
+      });
+
+      elFirstTimesList.appendChild(itemEl);
+    });
+
+    lucide.createIcons();
+  } catch (err) {
+    elFirstTimesList.innerHTML = `<div class="empty-state"><i data-lucide="alert-circle"></i>Failed to load milestones.</div>`;
+    lucide.createIcons();
+  }
+}
+
+// Add First-Time experience
+async function handleAddFirstTime(e) {
+  e.preventDefault();
+  const description = elFirstTimeInput.value.trim();
+  if (!description) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/first-times`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description })
+    });
+
+    if (!res.ok) throw new Error("Could not add milestone.");
+    elFirstTimeInput.value = '';
+    
+    await fetchFirstTimes();
+    showToast(`Logged milestone: ${description}`);
+  } catch (err) {
+    showToast(err.message, true);
+  }
+}
+
+// Delete First-Time experience
+async function deleteFirstTime(id) {
+  try {
+    const res = await fetch(`${API_BASE}/first-times/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!res.ok) throw new Error("Could not delete milestone.");
+    await fetchFirstTimes();
+    showToast("Milestone deleted.");
+  } catch (err) {
+    showToast(err.message, true);
+  }
+}
+
+// Render the dreams board cards
+function renderDreams() {
+  if (!elDreamsGrid) return;
+  elDreamsGrid.innerHTML = '';
+
+  DREAMS.forEach((dream, index) => {
+    const isAchieved = achievedDreams.includes(dream.id);
+    const isActiveBg = currentBgIndex === index;
+
+    const card = document.createElement('div');
+    card.className = `dream-card ${isAchieved ? 'achieved' : ''} ${isActiveBg ? 'active-bg' : ''}`;
+    card.style.backgroundImage = `url('${dream.image}')`;
+    
+    card.innerHTML = `
+      <div class="dream-card-overlay">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <input type="checkbox" class="dream-card-checkbox" ${isAchieved ? 'checked' : ''} title="Mark as achieved">
+          ${isAchieved ? '<span class="dream-badge-achieved"><i data-lucide="check" style="width: 8px; height: 8px;"></i> Done</span>' : ''}
+        </div>
+        <div class="dream-card-title">${dream.title}</div>
+      </div>
+    `;
+
+    // Click on checkbox to toggle achieved state
+    const checkbox = card.querySelector('.dream-card-checkbox');
+    checkbox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleDreamAchieved(dream.id, checkbox.checked);
+    });
+
+    // Click on card to set background
+    card.addEventListener('click', () => {
+      currentBgIndex = index;
+      localStorage.setItem('scheduleRightBgIndex', currentBgIndex);
+      applyBackground(currentBgIndex);
+      renderDreams();
+      showToast(`Theme changed to: ${dream.title}`);
+    });
+
+    elDreamsGrid.appendChild(card);
+  });
+
+  lucide.createIcons();
+}
+
+// Toggle achieved state
+function toggleDreamAchieved(id, checked) {
+  if (checked) {
+    if (!achievedDreams.includes(id)) {
+      achievedDreams.push(id);
+    }
+    showToast(`Dream marked as achieved! Keep pushing! 🌟`);
+  } else {
+    achievedDreams = achievedDreams.filter(d => d !== id);
+  }
+  localStorage.setItem('scheduleRightAchievedDreams', JSON.stringify(achievedDreams));
+  renderDreams();
+}
+
 // ============================================================================
 // 🔄 INITIALIZATION & EVENT LISTENERS
 // ============================================================================
@@ -833,6 +1034,23 @@ function setupEventListeners() {
     renderCalendar();
   });
   elRetroActivityForm.addEventListener('submit', handleRetroActivitySubmit);
+  
+  // Background cycler control
+  const elChangeBgBtn = document.getElementById('change-bg-btn');
+  if (elChangeBgBtn) {
+    elChangeBgBtn.addEventListener('click', () => {
+      currentBgIndex = (currentBgIndex + 1) % BACKGROUNDS.length;
+      localStorage.setItem('scheduleRightBgIndex', currentBgIndex);
+      applyBackground(currentBgIndex);
+      renderDreams();
+      showToast("Theme changed to next dream!");
+    });
+  }
+
+  // First-Times Notepad Controls
+  if (elFirstTimesForm) {
+    elFirstTimesForm.addEventListener('submit', handleAddFirstTime);
+  }
 
   // Todo Form Controls
   elTodoForm.addEventListener('submit', handleAddTodo);
@@ -865,10 +1083,22 @@ async function init() {
   setupHeaderDates();
   setupEventListeners();
   
+  // Initialize background
+  const savedBgIndex = localStorage.getItem('scheduleRightBgIndex');
+  if (savedBgIndex !== null) {
+    const parsed = parseInt(savedBgIndex, 10);
+    if (!isNaN(parsed) && parsed >= 0 && parsed < BACKGROUNDS.length) {
+      currentBgIndex = parsed;
+    }
+  }
+  applyBackground(currentBgIndex);
+  
   // Pull initial dynamic components
   await fetchRandomQuote(false);
   await fetchChecklist();
   await fetchTodos();
+  await fetchFirstTimes();
+  renderDreams();
   await fetchActiveDates();
   renderCalendar();
   

@@ -46,7 +46,8 @@ const mockDb = {
   quotes: initialQuotes.map((q, idx) => ({ QuoteID: idx + 1, ...q })),
   dailyChecklist: initialChecklist.map((name, idx) => ({ ItemID: idx + 1, ItemName: name })),
   activityLog: [],
-  todoList: []
+  todoList: [],
+  firstTimes: []
 };
 
 // Helper for local date ISO strings (YYYY-MM-DD)
@@ -195,6 +196,18 @@ async function createTablesIfNotExist() {
           TaskName NVARCHAR(255) NOT NULL,
           IsCompleted BIT DEFAULT 0,
           CreatedDate DATE DEFAULT GETDATE()
+        )
+      END
+    `);
+
+    // FirstTimeExperiences
+    await request.query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='FirstTimeExperiences' and xtype='U')
+      BEGIN
+        CREATE TABLE FirstTimeExperiences (
+          ExperienceID INT IDENTITY(1,1) PRIMARY KEY,
+          Description NVARCHAR(MAX) NOT NULL,
+          DateLogged DATE DEFAULT GETDATE()
         )
       END
     `);
@@ -788,6 +801,76 @@ app.get('/api/activities/active-dates', async (req, res) => {
     }).filter(Boolean);
     
     res.json(dates);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ----------------------------------------------------------------------------
+// 🌟 FIRST-TIME EXPERIENCES NOTEPAD API
+// ----------------------------------------------------------------------------
+
+app.get('/api/first-times', async (req, res) => {
+  if (useMockDb) {
+    const sorted = [...mockDb.firstTimes].sort((a, b) => b.ExperienceID - a.ExperienceID);
+    return res.json(sorted);
+  }
+
+  try {
+    const result = await pool.request().query(
+      `SELECT ExperienceID, Description, DateLogged 
+       FROM FirstTimeExperiences 
+       ORDER BY ExperienceID DESC`
+    );
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/first-times', async (req, res) => {
+  const { description } = req.body;
+  if (!description) {
+    return res.status(400).json({ error: "Description is required." });
+  }
+
+  if (useMockDb) {
+    const newFT = {
+      ExperienceID: Date.now(),
+      Description: description,
+      DateLogged: getTodayDateString()
+    };
+    mockDb.firstTimes.push(newFT);
+    return res.status(201).json(newFT);
+  }
+
+  try {
+    const request = pool.request();
+    request.input('description', sql.NVarChar, description);
+    const result = await request.query(
+      `INSERT INTO FirstTimeExperiences (Description, DateLogged) 
+       OUTPUT INSERTED.ExperienceID, INSERTED.Description, INSERTED.DateLogged
+       VALUES (@description, CAST(GETDATE() AS DATE))`
+    );
+    res.status(201).json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/first-times/:id', async (req, res) => {
+  const ftId = parseInt(req.params.id);
+
+  if (useMockDb) {
+    mockDb.firstTimes = mockDb.firstTimes.filter(t => t.ExperienceID !== ftId);
+    return res.json({ success: true });
+  }
+
+  try {
+    const request = pool.request();
+    request.input('ftId', sql.Int, ftId);
+    await request.query('DELETE FROM FirstTimeExperiences WHERE ExperienceID = @ftId');
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
