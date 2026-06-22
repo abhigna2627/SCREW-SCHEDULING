@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SereneDaily | Calm Self-Improvement & Quotes</title>
+  <!-- Google Fonts: Outfit for titles, Inter for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Main Container -->
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-main">
+        <h1 id="app-title"><span class="accent-text">Serene</span>Daily</h1>
+        <p class="header-subtitle">Your calm space for daily growth, habits, and self-reflection.</p>
+      </div>
+      <div class="header-date-box" id="header-date-box">
+        <div class="header-day-num" id="current-day-num">08</div>
+        <div class="header-day-details">
+          <span class="header-day-name" id="current-day-name">Monday</span>
+          <span class="header-month-year" id="current-month-year">June 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Grid -->
+    <main class="dashboard-grid">
+      
+      <!-- COLUMN 1: QUOTES & CALENDAR -->
+      <section class="grid-column col-left">
+        <!-- Quotes Section -->
+        <div class="dashboard-card quote-card" id="quote-card-section">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="quote" class="peach-icon"></i> Daily Wisdom</h2>
+            <div class="quote-toggle-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="include-secrets-toggle">
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">Allow secrets</span>
+            </div>
+          </div>
+          
+          <div class="quote-display-area" id="quote-display-area">
+            <p class="quote-text" id="quote-text">"The only way to do great work is to love what you do."</p>
+            <p class="quote-author" id="quote-author">— Steve Jobs</p>
+            <span class="quote-badge" id="quote-badge" style="display: none;">Personal Secret</span>
+          </div>
+
+          <div class="quote-actions">
+            <button class="btn btn-primary" id="new-quote-btn">
+              <i data-lucide="sparkles"></i> New Quote
+            </button>
+            <button class="btn btn-secondary" id="secret-quote-btn">
+              <i data-lucide="lock"></i> Tell Me a Secret
+            </button>
+          </div>
+
+          <!-- Add Custom Quote Expandable -->
+          <div class="add-quote-trigger" id="add-quote-trigger">
+            <span>Have something to add? Write a quote or secret...</span>
+            <i data-lucide="chevron-down" id="add-quote-arrow"></i>
+          </div>
+          
+          <form class="add-quote-form hidden" id="add-quote-form">
+            <div class="form-group">
+              <textarea id="new-quote-input" placeholder="Write your quote or personal secret here..." required rows="2"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" id="new-author-input" placeholder="Author (e.g. Myself, Seneca)">
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" id="new-is-secret-checkbox">
+                <label for="new-is-secret-checkbox">Mark as personal secret</label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-submit" id="submit-quote-btn">Add to My Library</button>
+          </form>
+        </div>
+
+        <!-- Interactive Calendar Section -->
+        <div class="dashboard-card calendar-card" id="calendar-card-section">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="calendar" class="peach-icon"></i> Growth Calendar</h2>
+            <div class="calendar-nav">
+              <button class="cal-nav-btn" id="prev-month-btn"><i data-lucide="chevron-left"></i></button>
+              <span class="calendar-month-title" id="calendar-month-title">June 2026</span>
+              <button class="cal-nav-btn" id="next-month-btn"><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+          
+          <!-- Month Grid -->
+          <div class="calendar-container">
+            <div class="calendar-weekdays">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="calendar-days" id="calendar-days-grid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+          
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="legend-dot active-dot"></span> Active Day (Logged activity)</span>
+            <span class="legend-item"><span class="legend-dot today-dot"></span> Today</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: HABIT CHECKLIST & TODO LIST -->
+      <section class="grid-column col-middle">
+        <!-- Static 10 Daily Checklist Section -->
+        <div class="dashboard-card checklist-card" id="checklist-card-section">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><i data-lucide="shield-check" class="peach-icon"></i> Daily Alignment</h2>
+              <p class="card-subtitle">Your core 10 daily self-improvement habits</p>
+            </div>
+            <div class="progress-circle-container">
+              <span class="progress-text" id="checklist-progress-text">0/10</span>
+            </div>
+          </div>
+          
+          <!-- Progress Bar -->
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="checklist-progress-bar" style="width: 0%;"></div>
+          </div>
+
+          <!-- Habit Checklist Items -->
+          <div class="checklist-items" id="checklist-items-container">
+            <!-- Loading or populated dynamically -->
+            <div class="loading-spinner">Loading habits...</div>
+          </div>
+        </div>
+
+        <!-- Dynamic To-Do List Section -->
+        <div class="dashboard-card todo-card" id="todo-card-section">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="list-todo" class="peach-icon"></i> Things To Do</h2>
+            <span class="badge" id="todo-count-badge">0 tasks</span>
+          </div>
+
+          <!-- Add Todo Form -->
+          <form class="add-todo-form" id="add-todo-form">
+            <input type="text" id="todo-input" placeholder="Add a new task..." required autocomplete="off">
+            <button type="submit" class="todo-add-btn" id="todo-add-btn">
+              <i data-lucide="plus"></i>
+            </button>
+          </form>
+
+          <!-- Todo Items List -->
+          <div class="todo-items-list" id="todo-items-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 3: ACTIVITIES LOGGED -->
+      <section class="grid-column col-right">
+        <!-- Log Activity Card -->
+        <div class="dashboard-card log-card" id="log-card-section">
+          <div class="card-header">
+            <h2 class="card-title"><i data-lucide="history" class="peach-icon"></i> Activity Feed</h2>
+          </div>
+
+          <!-- Log Custom Activity Form -->
+          <form class="log-activity-form" id="log-activity-form">
+            <input type="text" id="activity-input" placeholder="What else did you accomplish today?" required autocomplete="off">
+            <button type="submit" class="btn btn-primary log-btn" id="log-activity-btn">
+              Log Activity
+            </button>
+          </form>
+
+          <!-- History Tabs -->
+          <div class="tabs-container">
+            <button class="tab-btn active" id="tab-today-btn">Today</button>
+            <button class="tab-btn" id="tab-week-btn">This Week</button>
+          </div>
+
+          <!-- Activities Feed Content -->
+          <div class="feed-container" id="feed-container">
+            <!-- Today's feed -->
+            <div class="feed-content active-feed" id="feed-today">
+              <div class="feed-items-list" id="feed-today-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+            
+            <!-- Weekly feed -->
+            <div class="feed-content" id="feed-week">
+              <div class="feed-items-list" id="feed-week-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Date View Drawer/Card (Shows when historical date is clicked) -->
+        <div class="dashboard-card date-details-card hidden" id="date-details-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" id="selected-date-title">Activities on June 7, 2026</h2>
+              <p class="card-subtitle">Historical log entry</p>
+            </div>
+            <button class="close-card-btn" id="close-details-btn"><i data-lucide="x"></i></button>
+          </div>
+          
+          <div class="selected-date-content">
+            <!-- Form to log retroactively -->
+            <form class="retro-activity-form" id="retro-activity-form">
+              <input type="text" id="retro-activity-input" placeholder="Add missing activity for this day..." required autocomplete="off">
+              <button type="submit" class="btn btn-secondary btn-small">Add</button>
+            </form>
+            
+            <div class="retro-items-list" id="selected-date-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer-bar">
+      <p>SereneDaily &bull; Connected to SQL Server database `SelfImprovementDB` &bull; Built for Self-Improvement</p>
+    </footer>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons after content loads
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

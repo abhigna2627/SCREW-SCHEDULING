@@ -1,0 +1,1178 @@
+/* ============================================================================
+   🎨 DESIGN SYSTEM: CALM PEARL WHITE & PEACH
+   ============================================================================ */
+
+:root {
+  /* Color Palette */
+  --bg-primary: #FAF9F6;       /* Pearl white background */
+  --bg-card: #FFFFFF;          /* Pure white card backgrounds */
+  --bg-peach-light: #FFF1EB;   /* Calm light peach background */
+  --bg-peach-soft: #FFE4D6;    /* Soft peach pill/highlight */
+  --color-peach: #FF8A75;      /* Primary peach tone */
+  --color-peach-hover: #FFA491;/* Hover peach state */
+  --color-peach-dark: #E66F5A; /* Deep peach for text readability */
+  
+  /* Neutral Palette */
+  --text-main: #3C3836;        /* Deep warm charcoal */
+  --text-muted: #7C7570;       /* Muted taupe */
+  --border-calm: #F0ECE1;      /* Delicate border line */
+  --border-peach: rgba(255, 138, 117, 0.15); /* Light peach border */
+  
+  /* Shadow & Blur System */
+  --shadow-sm: 0 2px 8px rgba(78, 73, 69, 0.04);
+  --shadow-md: 0 8px 24px rgba(78, 73, 69, 0.06);
+  --shadow-lg: 0 16px 36px rgba(230, 111, 90, 0.08);
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  
+  /* Transition timings */
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-fast: all 0.15s ease-out;
+}
+
+/* ============================================================================
+   🌱 BASE STYLES
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 10% 20%, rgba(255, 228, 214, 0.4) 0px, transparent 50%),
+    radial-gradient(at 90% 80%, rgba(255, 241, 235, 0.6) 0px, transparent 50%);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================================
+   🧩 LAYOUT & GRID
+   ============================================================================ */
+
+.app-container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-calm);
+  padding-bottom: 1.5rem;
+  animation: fadeInDown 0.8s var(--transition-smooth);
+}
+
+#app-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+.accent-text {
+  color: var(--color-peach);
+  position: relative;
+}
+
+.accent-text::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: var(--bg-peach-soft);
+  z-index: -1;
+  border-radius: 4px;
+}
+
+.header-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 300;
+  margin-top: 0.25rem;
+}
+
+.header-date-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-calm);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-day-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-peach-dark);
+  line-height: 1;
+}
+
+.header-day-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-day-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.header-month-year {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.9fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .col-right {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .header-date-box {
+    align-self: stretch;
+    justify-content: center;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .col-right, .col-middle, .col-left {
+    grid-column: span 1;
+  }
+}
+
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ============================================================================
+   📦 PREMIUM CARDS (GLASSMORPHISM / PEACEY AESTHETIC)
+   ============================================================================ */
+
+.dashboard-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-peach);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s var(--transition-smooth) both;
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--bg-peach-soft), var(--color-peach));
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(255, 138, 117, 0.3);
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.peach-icon {
+  color: var(--color-peach);
+  width: 22px;
+  height: 22px;
+}
+
+/* ============================================================================
+   💬 WISDOM & QUOTES CARD
+   ============================================================================ */
+
+.quote-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.quote-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-peach-light);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-peach-dark);
+}
+
+.quote-display-area {
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-left: 2px solid var(--bg-peach-soft);
+  border-right: 2px solid var(--bg-peach-soft);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.quote-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-main);
+  line-height: 1.5;
+  transition: var(--transition-smooth);
+}
+
+.quote-author {
+  margin-top: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-peach-dark);
+  letter-spacing: 0.5px;
+}
+
+.quote-badge {
+  position: absolute;
+  top: -12px;
+  background: linear-gradient(135deg, var(--color-peach), var(--color-peach-dark));
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 6px rgba(230, 111, 90, 0.3);
+}
+
+.quote-actions {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-primary {
+  background-color: var(--color-peach);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 138, 117, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-peach-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 138, 117, 0.3);
+}
+
+.btn-secondary {
+  background-color: var(--bg-peach-light);
+  color: var(--color-peach-dark);
+  border: 1px solid rgba(255, 138, 117, 0.2);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-peach-soft);
+  color: var(--color-peach-dark);
+}
+
+.btn-submit {
+  background-color: var(--text-main);
+  color: #FFF1EB;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: var(--text-muted);
+}
+
+/* Add custom quote accordion */
+.add-quote-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border-calm);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.add-quote-trigger:hover {
+  color: var(--color-peach-dark);
+}
+
+.add-quote-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-calm);
+  animation: slideDown 0.3s ease-out;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-calm);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  background-color: var(--bg-primary);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--color-peach);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 138, 117, 0.1);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.checkbox-group input {
+  accent-color: var(--color-peach);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* ============================================================================
+   📅 INTERACTIVE CALENDAR
+   ============================================================================ */
+
+.calendar-card {
+  padding-bottom: 1.25rem;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cal-nav-btn {
+  background: none;
+  border: 1px solid var(--border-calm);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.cal-nav-btn:hover {
+  background: var(--bg-peach-light);
+  color: var(--color-peach-dark);
+  border-color: var(--color-peach);
+}
+
+.calendar-month-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 90px;
+  text-align: center;
+}
+
+.calendar-container {
+  margin-top: 1rem;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+  color: var(--text-main);
+  background: none;
+  border: none;
+}
+
+.calendar-day-cell:hover:not(.empty-cell) {
+  background-color: var(--bg-peach-light);
+  color: var(--color-peach-dark);
+}
+
+.calendar-day-cell.empty-cell {
+  cursor: default;
+}
+
+.calendar-day-cell.today {
+  border: 2px solid var(--color-peach);
+  font-weight: 700;
+  color: var(--color-peach-dark);
+}
+
+.calendar-day-cell.active-day {
+  background-color: var(--bg-peach-soft);
+  font-weight: 600;
+}
+
+.calendar-day-cell.active-day::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-peach-dark);
+}
+
+.calendar-day-cell.selected-day {
+  background-color: var(--color-peach) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(255, 138, 117, 0.4);
+}
+
+.calendar-day-cell.selected-day::after {
+  background-color: white;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-calm);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.active-dot {
+  background-color: var(--bg-peach-soft);
+  border: 1px solid var(--color-peach);
+}
+
+.legend-dot.today-dot {
+  border: 1.5px solid var(--color-peach);
+}
+
+/* ============================================================================
+   📋 HABIT CHECKLIST (CORE 10 DAILY ALIGNMENTS)
+   ============================================================================ */
+
+.checklist-card {
+  position: relative;
+}
+
+.progress-circle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--bg-peach-light);
+  border: 2px solid var(--color-peach);
+}
+
+.progress-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-peach-dark);
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: var(--bg-primary);
+  border-radius: 3px;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--bg-peach-soft), var(--color-peach));
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.5s cubic-bezier(0.1, 0.8, 0.25, 1);
+}
+
+.checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-calm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.checklist-item:hover {
+  background: #fff;
+  border-color: rgba(255, 138, 117, 0.3);
+  transform: translateX(2px);
+}
+
+/* Custom Checkbox Design */
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border-calm);
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+  color: transparent;
+}
+
+.checkbox-custom i {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3px;
+}
+
+.checklist-item.checked .checkbox-custom {
+  background-color: var(--color-peach);
+  border-color: var(--color-peach);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(255, 138, 117, 0.2);
+}
+
+.checklist-item-text {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  transition: var(--transition-smooth);
+  user-select: none;
+}
+
+.checklist-item.checked .checklist-item-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   📝 DYNAMIC TODO LIST
+   ============================================================================ */
+
+.todo-card {
+  max-height: 550px;
+  display: flex;
+  flex-direction: column;
+}
+
+.badge {
+  background: var(--bg-peach-light);
+  color: var(--color-peach-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.60rem;
+  border-radius: 12px;
+}
+
+.add-todo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.todo-add-btn {
+  background-color: var(--color-peach);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.todo-add-btn:hover {
+  background-color: var(--color-peach-hover);
+  transform: scale(1.03);
+}
+
+.todo-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  flex-grow: 1;
+  max-height: 300px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: #FFFBF9;
+  border: 1px solid var(--border-peach);
+  transition: var(--transition-fast);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.todo-item:hover {
+  background: #fff;
+  border-color: rgba(255, 138, 117, 0.4);
+}
+
+.todo-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.todo-item.checked .checkbox-custom {
+  background-color: var(--color-peach);
+  border-color: var(--color-peach);
+  color: #fff;
+}
+
+.todo-item.checked .todo-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.todo-text {
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.todo-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.todo-delete-btn:hover {
+  color: #E66F5A;
+  background: #FFF1EB;
+}
+
+.todo-delete-btn i {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================================================
+   📈 ACTIVITY FEED
+   ============================================================================ */
+
+.log-activity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.log-btn {
+  width: 100%;
+}
+
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid var(--border-calm);
+  margin-bottom: 1rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  flex-grow: 1;
+  padding: 0.6rem 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--color-peach-dark);
+}
+
+.tab-btn.active {
+  color: var(--color-peach-dark);
+  border-bottom-color: var(--color-peach);
+  font-weight: 600;
+}
+
+.feed-container {
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.feed-content {
+  display: none;
+}
+
+.feed-content.active-feed {
+  display: block;
+}
+
+.feed-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-calm);
+  position: relative;
+}
+
+.feed-item-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-peach);
+  margin-top: 0.4rem;
+  flex-shrink: 0;
+}
+
+.feed-item-details {
+  flex-grow: 1;
+}
+
+.feed-item-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
+  word-break: break-word;
+}
+
+.feed-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.feed-item-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.feed-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  padding: 0;
+  display: none; /* Shown on hover */
+}
+
+.feed-item:hover .feed-delete-btn {
+  display: inline-block;
+}
+
+.feed-delete-btn:hover {
+  color: var(--color-peach-dark);
+}
+
+.feed-delete-btn i {
+  width: 14px;
+  height: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.empty-state i {
+  width: 24px;
+  height: 24px;
+  color: var(--bg-peach-soft);
+}
+
+/* Group headings for weekly view */
+.feed-group-header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-peach-dark);
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+/* ============================================================================
+   📅 DETAILED DATE VIEW CARD (DRAWER)
+   ============================================================================ */
+
+.date-details-card {
+  border: 1.5px solid var(--color-peach);
+  background-color: #FFFBF9;
+}
+
+.close-card-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.close-card-btn:hover {
+  color: var(--text-main);
+  transform: scale(1.1);
+}
+
+.retro-activity-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.retro-activity-form input {
+  background-color: #fff;
+}
+
+.btn-small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.retro-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.retro-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-calm);
+  font-size: 0.8rem;
+}
+
+/* ============================================================================
+   🔔 TOAST NOTIFICATIONS
+   ============================================================================ */
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.toast {
+  background-color: var(--text-main);
+  color: #FFF1EB;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-left: 4px solid var(--color-peach);
+  animation: slideInRight 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.toast.toast-error {
+  border-left-color: #E66F5A;
+}
+
+/* ============================================================================
+   💅 GLOBAL FOOTER
+   ============================================================================ */
+
+.app-footer-bar {
+  text-align: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border-calm);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+/* ============================================================================
+   🌊 ANIMATIONS & KEYFRAMES
+   ============================================================================ */
+
+.hidden {
+  display: none !important;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-peach-soft);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-peach);
+}
+
+/* Loading animations */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
